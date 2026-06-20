@@ -7,10 +7,23 @@ export default defineConfig({
     chunkSizeWarningLimit: 2500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ["three"],
-          rapier: ["@react-three/rapier"],
-          r3f: ["@react-three/fiber", "@react-three/drei"],
+        manualChunks(id) {
+          const normalizedId = id.replace(/\\/g, "/");
+
+          if (normalizedId.includes("/node_modules/three/")) {
+            return "three";
+          }
+
+          if (normalizedId.includes("/node_modules/@react-three/rapier/")) {
+            return "rapier";
+          }
+
+          if (
+            normalizedId.includes("/node_modules/@react-three/fiber/") ||
+            normalizedId.includes("/node_modules/@react-three/drei/")
+          ) {
+            return "r3f";
+          }
         },
       },
     },
